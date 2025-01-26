@@ -26,8 +26,7 @@
         flex-grow: 1;
         overflow-y: auto;
         display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
+        flex-direction: column-reverse;
       }
       .input-line {
         display: flex;
@@ -84,8 +83,8 @@
         resultElement.className = "result";
         resultElement.textContent = result;
 
-        historyElement.appendChild(commandElement);
-        historyElement.appendChild(resultElement);
+        historyElement.prepend(commandElement);
+        historyElement.prepend(resultElement);
 
         historyElement.scrollTop = historyElement.scrollHeight;
       }
