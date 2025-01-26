@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TUI</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        font-family: monospace;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .tui {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        padding: 10px;
+      }
+      .history {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .input-line {
+        display: flex;
+      }
+      .input {
+        background-color: black;
+        color: white;
+        border: none;
+        flex-grow: 1;
+        caret-color: white;
+        outline: none;
+      }
+      .prompt {
+        margin-right: 5px;
+      }
+      .command {
+        color: white;
+      }
+      .result {
+        color: gray;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tui" tabindex="0">
+      <div class="history" id="history"></div>
+      <div class="input-line">
+        <span class="prompt">&gt; </span>
+        <input class="input" id="input" type="text" autofocus />
+      </div>
+    </div>
+    <script>
+      const historyElement = document.getElementById("history");
+      const inputElement = document.getElementById("input");
+
+      inputElement.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          const command = inputElement.value.trim();
+          if (command) {
+            const result = executeCommand(command);
+            addHistory(command, result);
+            inputElement.value = "";
+          }
+        }
+      });
+
+      function addHistory(command, result) {
+        const commandElement = document.createElement("div");
+        commandElement.className = "command";
+        commandElement.textContent = `> ${command}`;
+
+        const resultElement = document.createElement("div");
+        resultElement.className = "result";
+        resultElement.textContent = result;
+
+        historyElement.appendChild(commandElement);
+        historyElement.appendChild(resultElement);
+
+        historyElement.scrollTop = historyElement.scrollHeight;
+      }
+
+      function executeCommand(command) {
+        switch (command) {
+          case "help":
+            return "Available commands: help, echo [text], clear";
+          case "clear":
+            historyElement.innerHTML = "";
+            return "";
+          default:
+            if (command.startsWith("echo ")) {
+              return command.slice(5);
+            }
+            return "Unknown command";
+        }
+      }
+    </script>
+  </body>
+</html>
